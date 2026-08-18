@@ -3,11 +3,10 @@ services:
     image: postgres:latest
     container_name: postgres
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
-      - ./init-db:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql
 
 volumes:

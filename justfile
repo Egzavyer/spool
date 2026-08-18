@@ -1,4 +1,19 @@
 set shell := ["powershell","-c"]
+set dotenv-load := true
+
+pg_url := env("PG_URL")
+
+db-migrate DIRECTION AMOUNT="":
+    migrate -source file://db/migrations -database {{pg_url}} {{DIRECTION}} {{AMOUNT}}
+
+db-create NAME:
+    migrate create -ext sql -dir db/migrations -seq {{NAME}}
+
+db-connect:
+    docker exec -it postgres psql -U postgres -d postgres
+
+create-migration TITLE:
+    migrate create -ext sql -dir db/migrations -seq {{TITLE}}
 
 run-server: build-server
     ./build/server/server.exe
