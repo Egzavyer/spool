@@ -15,3 +15,8 @@ Migrations to the database are applied using the `golang-migrate` library. The s
 ## Next Steps
 
 - Define basic client-server communication protocol. Look into [protobuf](https://protobuf.dev/getting-started/gotutorial) for protocol definition
+
+- Client can request to see the list of possible job types
+- Client can create a new job type
+- Client can create a new job instance
+- Client can ask to see the job log (all the jobs that were submitted and their status)

@@ -1,0 +1,27 @@
+syntax = "proto3";
+package spool;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "spool/protos";
+
+enum JobStatus {
+    PENDING = 0;
+    COMPLETED = 1;
+    FAILED = 2;
+    RUNNING = 3;
+}
+
+message Job {
+    string job_id = 1;
+    google.protobuf.Timestamp requested_at = 2;
+    google.protobuf.Timestamp updated_at = 3;
+    JobStatus job_status = 4;
+
+    message JobType {
+        int32 job_type_id = 1;
+        string name = 2;
+    }
+
+    JobType job_type = 5;
+}
