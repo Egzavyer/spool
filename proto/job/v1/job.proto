@@ -1,15 +1,16 @@
 syntax = "proto3";
-package spool;
+package job.v1;
 
 import "google/protobuf/timestamp.proto";
 
 option go_package = "spool/protos";
 
 enum JobStatus {
-    PENDING = 0;
-    COMPLETED = 1;
-    FAILED = 2;
-    RUNNING = 3;
+    JOB_STATUS_UNSPECIFIED = 0;
+    JOB_STATUS_PENDING = 1;
+    JOB_STATUS_COMPLETED = 2;
+    JOB_STATUS_FAILED = 3;
+    JOB_STATUS_RUNNING = 4;
 }
 
 message Job {

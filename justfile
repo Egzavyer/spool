@@ -3,6 +3,9 @@ set dotenv-load := true
 
 pg_url := env("PG_URL")
 
+buf-breaking:
+    buf breaking --against .git#subdir=proto
+
 db-migrate DIRECTION AMOUNT="":
     migrate -source file://db/migrations -database {{pg_url}} {{DIRECTION}} {{AMOUNT}}
 
