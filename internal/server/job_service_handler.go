@@ -3,15 +3,28 @@ package server
 import (
 	"context"
 	jobv1 "spool/gen/job/v1"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type JobServiceHandler struct{}
+type JobServiceHandler struct {
+	dbpool *pgxpool.Pool
+}
 
 func (s *JobServiceHandler) CreateJobType(
 	_ context.Context,
 	req *jobv1.CreateJobTypeRequest,
 ) (*jobv1.CreateJobTypeResponse, error) {
-	res := &jobv1.CreateJobTypeResponse{}
+
+	query := `
+		INSERT INTO Job_Types(job_type_name)
+		VALUES ($1) 
+		RETURNING job_type_id, job_type_name`
+	var jobType jobv1.JobType
+	if err := s.dbpool.QueryRow(context.Background(), query, req.Name).Scan(&jobType.Id, &jobType.Name); err != nil {
+		return nil, err
+	}
+	res := &jobv1.CreateJobTypeResponse{JobType: &jobType}
 	return res, nil
 }
 

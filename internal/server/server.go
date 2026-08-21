@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"errors"
 	"log"
 	"net/http"
@@ -12,13 +13,10 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/joho/godotenv"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func ApplyMigrations() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
 
 	log.Println("Applying migrations")
 	pg_url := os.Getenv("PG_URL")
@@ -31,6 +29,7 @@ func ApplyMigrations() {
 	if err := m.Up(); err != nil {
 		if errors.Is(err, migrate.ErrNoChange) {
 			log.Println("Database is already up to date, no migrations applied")
+			return
 		} else {
 			log.Fatalf("Failed to apply migrations: %s", err)
 		}
@@ -39,8 +38,16 @@ func ApplyMigrations() {
 	log.Println("Migrations applied successfully")
 }
 
-func NewServer() *http.Server {
-	jobServiceHandler := &JobServiceHandler{}
+func ConnectDB() *pgxpool.Pool {
+	dbpool, err := pgxpool.New(context.Background(), os.Getenv("PG_URL"))
+	if err != nil {
+		log.Fatalf("Unable to create connection pool: %v\n", err)
+	}
+	return dbpool
+}
+
+func NewServer(dbpool *pgxpool.Pool) *http.Server {
+	jobServiceHandler := &JobServiceHandler{dbpool: dbpool}
 
 	mux := http.NewServeMux()
 	path, handler := jobv1connect.NewJobServiceHandler(jobServiceHandler,
