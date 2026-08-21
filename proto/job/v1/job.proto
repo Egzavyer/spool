@@ -2,18 +2,11 @@ syntax = "proto3";
 package job.v1;
 
 import "google/protobuf/timestamp.proto";
-
-message CreateJobTypeRequest {
-    string name = 1; // name of the new job type
-}
+import "buf/validate/validate.proto";
 
 message JobType {
     int32 id = 1;
     string name = 2;
-}
-
-message CreateJobRequest {
-    int32 job_type_id = 1; // id of the type of the job requested to be run
 }
 
 enum JobStatus {
@@ -32,11 +25,35 @@ message Job {
     JobType job_type = 5;
 }
 
+message CreateJobTypeRequest {
+    string name = 1 [(buf.validate.field).string = {
+        min_len: 1
+    }]; // name of the new job type
+}
+
+message CreateJobTypeResponse {
+    JobType job_type = 1;
+}
+
+message CreateJobRequest {
+    int32 job_type_id = 1; // id of the type of the job requested to be run
+}
+
+message CreateJobResponse {
+    Job job = 1;
+}
+
 message GetJobTypeRequest {
     int32 id = 1;
 }
 
-message GetJobTypesResponse {
+message GetJobTypeResponse {
+    JobType job_type = 1;
+}
+
+message ListJobTypesRequest {}
+
+message ListJobTypesResponse {
     repeated JobType job_types = 1;
 }
 
@@ -44,6 +61,21 @@ message GetJobRequest {
     string id = 1;
 }
 
-message GetJobsResponse {
+message GetJobResponse {
+    Job job = 1;
+}
+
+message ListJobsRequest {}
+
+message ListJobsResponse {
     repeated Job jobs = 1;
+}
+
+service JobService {
+    rpc CreateJobType(CreateJobTypeRequest) returns (CreateJobTypeResponse) {}
+    rpc CreateJob(CreateJobRequest) returns (CreateJobResponse) {}
+    rpc GetJobType(GetJobTypeRequest) returns (GetJobTypeResponse) {}
+    rpc GetJob(GetJobRequest) returns (GetJobResponse) {}
+    rpc ListJobTypes(ListJobTypesRequest) returns (ListJobTypesResponse) {}
+    rpc ListJobs(ListJobsRequest) returns (ListJobsResponse) {}
 }
