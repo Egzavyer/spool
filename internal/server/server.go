@@ -47,7 +47,7 @@ func ConnectDB() *pgxpool.Pool {
 	return dbpool
 }
 
-func NewServer(dbpool *pgxpool.Pool) *http.Server {
+func NewServer(dbpool *pgxpool.Pool, addr string) *http.Server {
 	jobServiceHandler := &services.JobServiceHandler{DbPool: dbpool}
 
 	mux := http.NewServeMux()
@@ -63,7 +63,7 @@ func NewServer(dbpool *pgxpool.Pool) *http.Server {
 	p.SetUnencryptedHTTP2(true)
 
 	return &http.Server{
-		Addr:      "localhost:8080",
+		Addr:      addr,
 		Handler:   mux,
 		Protocols: p,
 	}

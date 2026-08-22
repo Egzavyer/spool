@@ -32,6 +32,13 @@ Migrations to the database are applied using the `golang-migrate` library. The s
 
 Database errors are translated in the service into useful `ConnectRPC Errors`, abstracting database information away.
 
+## Config
+
+Centralised system configuration is found in the `config` folder. This provides a single place where you can change properties of the system.
+Current properties are:
+
+- Server port on localhost
+
 ## Tools
 
 - [just](https://github.com/casey/just) : Open-source command runner
@@ -43,5 +50,5 @@ Database errors are translated in the service into useful `ConnectRPC Errors`, a
 ## Next Steps
 
 - Look into Connect-Go field validation and apply rules wherever needed
-- Set a global config for ease of change (server port,etc.)
+- Service/Repository architecture
 - Testing
