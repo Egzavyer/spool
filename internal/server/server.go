@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"spool/gen/job/v1/jobv1connect"
+	"spool/internal/server/services"
 
 	"connectrpc.com/connect"
 	"connectrpc.com/validate"
@@ -47,7 +48,7 @@ func ConnectDB() *pgxpool.Pool {
 }
 
 func NewServer(dbpool *pgxpool.Pool) *http.Server {
-	jobServiceHandler := &JobServiceHandler{dbpool: dbpool}
+	jobServiceHandler := &services.JobServiceHandler{DbPool: dbpool}
 
 	mux := http.NewServeMux()
 	path, handler := jobv1connect.NewJobServiceHandler(jobServiceHandler,

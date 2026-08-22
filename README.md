@@ -28,6 +28,10 @@ This project uses a PostgreSQL database inside of a [docker container](https://d
 
 Migrations to the database are applied using the `golang-migrate` library. The server always tries to migrate up to the latest schema on startup. Migrations can also be applied or reversed manually using the [CLI tool](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate) by running `just db-migrate <up|down> [amount]`. Leaving amount blank will apply or reverse all migrations. To create a new migration, run `just db-create <name>`. See [documentation](https://github.com/golang-migrate/migrate/tree/master) for more details.
 
+## Errors
+
+Database errors are translated in the service into useful `ConnectRPC Errors`, abstracting database information away.
+
 ## Tools
 
 - [just](https://github.com/casey/just) : Open-source command runner
@@ -40,3 +44,4 @@ Migrations to the database are applied using the `golang-migrate` library. The s
 
 - Look into Connect-Go field validation and apply rules wherever needed
 - Set a global config for ease of change (server port,etc.)
+- Testing

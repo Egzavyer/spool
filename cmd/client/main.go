@@ -13,14 +13,18 @@ func main() {
 		http.DefaultClient,
 		"http://localhost:8080",
 	)
-	res, err := client.CreateJobType(
+	res, err := client.CreateJob(
 		context.Background(),
-		&jobv1.CreateJobTypeRequest{Name: "test"},
+		&jobv1.CreateJobRequest{JobTypeId: 2},
 	)
+	// res, err := client.CreateJobType(
+	// 	context.Background(),
+	// 	&jobv1.CreateJobTypeRequest{Name: "test"},
+	// )
 	if err != nil {
 		log.Printf("Error occurred: %v", err)
 		return
 	}
 
-	log.Println(res.JobType)
+	log.Println(res.Job)
 }
